@@ -12,6 +12,16 @@ $.each(eventText, function () {
 
 $("#currentDay").text(`${currentTime.format('dddd, MMMM Do')}`);
 
+// Display event list if there is one before calling a new one 
+
+if (localStorage.getItem("savedEvents")) {
+    hourBlocks = JSON.parse(localStorage.getItem('savedEvents'));
+}
+else {
+    hourBlocks = [];
+};
+
+
 // Main function to determine if the time is then, now, or later. Offset by number of IDs
 
 function schedulerTimeNow() {
@@ -30,4 +40,23 @@ function schedulerTimeNow() {
 };
 thisHour = currentTime.hour();
 
+// Function to save to local storage 
 
+function saveToStore() {
+    event.preventDefault();
+    localStorage.setItem("savedEvents", JSON.stringify(hourBlocks));
+};
+
+function displaySavedEvents() {
+    $.each(hourBlocks, function (i) {
+        if(hourBlocks[i]) {
+            eventText[i].value = hourBlocks[i].event
+        }
+    });
+}
+
+
+
+schedulerTimeNow();
+displaySavedEvents();
+$("button").click(saveToStore);
